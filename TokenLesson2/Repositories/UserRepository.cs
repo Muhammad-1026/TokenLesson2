@@ -25,11 +25,13 @@ public class UserRepository : IUserRepository
 
     public async Task<User> CreateUserAsync(CreateUserDto createUserDto, CancellationToken cancellationToken = default)
     {
-        _context.Users.Add(_mapper.Map<User>(createUserDto));
+        var user = _mapper.Map<User>(createUserDto);
+
+        _context.Users.Add(user);
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<User>(createUserDto);
+        return user;
     }
 
     public async Task<User?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
@@ -66,7 +68,7 @@ public class UserRepository : IUserRepository
 
         user.UpdatedAt = DateTime.UtcNow;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken); 
 
         return _mapper.Map<User>(user);
     }
@@ -76,7 +78,7 @@ public class UserRepository : IUserRepository
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
         if (user is null)
-            throw new KeyNotFoundException("User not found");
+            throw new KeyNotFoundException("User не найден");
 
         _context.Users.Remove(user);
         await _context.SaveChangesAsync(cancellationToken);
