@@ -5,5 +5,5 @@ namespace TokenLesson2.Interface.Services;
 
 public interface IAuthService
 {
-    Task<UserDto?> LoginAsync(LoginRequestDto loginRequestDto, CancellationToken cancellation = default);
+    Task<TokenDto> LoginAsync(LoginDto loginDto, CancellationToken cancellation = default);
 }

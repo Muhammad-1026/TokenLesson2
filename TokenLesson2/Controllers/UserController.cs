@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TokenLesson2.Dtos.Request;
 using TokenLesson2.Dtos.Response;
 using TokenLesson2.Interface.Services;
@@ -18,12 +19,14 @@ public class UserController : ControllerBase
         _authService = authService;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<List<UserDto>>> GetAll(CancellationToken cancellationToken = default)
     {
         return Ok(await _userService.GetAllAsync(cancellationToken));
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> CreateUser(CreateUserDto createUserDto, CancellationToken cancellationToken = default)
     {
@@ -31,20 +34,23 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<UserDto?>> Login(LoginRequestDto loginRequestDto, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<TokenDto>> Login(LoginDto loginDto, CancellationToken cancellationToken = default)
     {
-        return await _authService.LoginAsync(loginRequestDto, cancellationToken);
+        return await _authService.LoginAsync(loginDto, cancellationToken);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<ActionResult<UserDto>> UpdateUser(UpdateUserDto updateUserDto, CancellationToken cancellationToken = default)
     {
         return await _userService.UpdateUserAsync(updateUserDto, cancellationToken);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
+        await Task.CompletedTask;
         return Ok(true);
     }
 }

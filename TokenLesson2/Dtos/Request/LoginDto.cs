@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TokenLesson2.Dtos.Response;
 
 namespace TokenLesson2.Dtos.Request;
 
-public class LoginRequestDto
+public class LoginDto
 {
     [Required]
     [MaxLength(12)]

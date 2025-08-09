@@ -1,8 +1,9 @@
-﻿using TokenLesson2.Models.User;
+﻿using TokenLesson2.Dtos.Request;
+using TokenLesson2.Models.User;
 
 namespace TokenLesson2.Interface.Repository;
 
 public interface IAuthRepository
 {
-    Task<User?> GetByUserNameAsync(string userName, CancellationToken cancellation = default);
+    Task<User?> GetUserByCredentialsAsync(LoginDto loginDto, CancellationToken cancellation = default);
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TokenLesson2.DataContext;
+using TokenLesson2.Dtos.Request;
 using TokenLesson2.Interface.Repository;
 using TokenLesson2.Models.User;
 
@@ -14,39 +15,17 @@ public class AuthRepository : IAuthRepository
         _context = context;
     }
 
-    public async Task<User?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+    public async Task<User?> GetUserByCredentialsAsync(LoginDto loginDto, CancellationToken cancellationToken = default)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName, cancellationToken);
+        var userName = loginDto.UserName;
+        var userPassword = loginDto.UserPassword;
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName, cancellationToken)
+            ?? throw new KeyNotFoundException("Неправильное имя пользователя или пароль.");
+
+        if (!BCrypt.Net.BCrypt.Verify(userPassword, user.UserPassword))
+            throw new KeyNotFoundException("Неправильное имя пользователя или пароль.");
 
         return user;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//public class LoginDto
-//{
-//    public string Token { get; set; }
-//    public UserDto User { get; set; }
-//}
-
-//private string RoleToString(int role)
-//{
-//    return role switch
-//    {
-//        1 => "Admin",
-//        2 => "User",
-//    };
-//}
